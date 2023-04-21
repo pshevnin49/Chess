@@ -5,12 +5,16 @@ public class Game {
     private Sides movingSide;
     private Sides gamerSide;
     private boolean isClicked;
+    private CoordXY clickedCell;
 
-    public Game() {
+    public Game(Sides gamerSide, Sides movingSide) {
 
         //this.gamerSide = gamerSide;
         field = generateField();
         clickedField = new boolean[8][8];
+        this.gamerSide = gamerSide;
+        this.movingSide = movingSide;
+        clickedCell = null;
 
         for(int i = 0; i < clickedField.length; i++){
             for(int j = 0; j < clickedField[i].length; j++){
@@ -65,32 +69,62 @@ public class Game {
         System.out.println(x + " clicked x");
         System.out.println(y + " clicked y");
 
-        isClicked = true;
-        try {
-            clickedField[x][y] = true;
-            if(field[x][y].getSide() == gamerSide){
-                switch (field[x][y].getFigureType()){
-                    case PAWN -> pawnCLick(x, y);
+        if(!isClicked){
+            try {
+                clickedField[y][x] = true;
+                System.out.println(field[y][x].getSide() + " side");
+                if(field[y][x].getSide() == gamerSide){
+                    isClicked = true;
+                    System.out.println(field[y][x].getFigureType() + " figure type");
+                    clickedCell = new CoordXY(x, y);
+                    switch (field[y][x].getFigureType()){
+                        case PAWN -> pawnCLick(x, y);
+                    }
+                }
+            }catch (ArrayIndexOutOfBoundsException e){
+                System.out.println("Out of field!");
+            }
+        }else{
+            if(clickedField[y][x]){
+                if(field[y][x] == null || field[y][x].getSide() != gamerSide){ // написать нормально
+                    //move
+                    isClicked = false;
+                    clickedCell = null;
+                    cleanClicked();
+                }else{
+                    isClicked = false;
+                    cleanClicked();
                 }
             }
-        }catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Out of field!");
+            else{
+                isClicked = false;
+                clickedCell = null;
+                cleanClicked();
+            }
         }
+    }
+
+    private void moveFigure(int x, int y){
 
     }
 
     private void pawnCLick(int x, int y){
+
         try{
-            clickedField[x][y - 1] = true;
-        }catch (ArrayIndexOutOfBoundsException e){
+            if(field[y - 1][x] == null){
+                clickedField[y - 1][x] = true;
+                System.out.println("Yes");
+            }
 
+        }catch (ArrayIndexOutOfBoundsException e){
+            System.out.println("No1");
         }
 
         try {
 
-            if(field [x + 1][y - 1] != null){
-                if(field [x + 1][y - 1].getSide() != gamerSide){
-                    clickedField[x + 1][y - 1] = true;
+            if(field [y - 1][x + 1] != null){
+                if(field [y - 1][x - 1].getSide() != gamerSide){
+                    clickedField[y - 1][x + 1] = true;
                 }
             }
 
@@ -99,14 +133,22 @@ public class Game {
         }
 
         try {
-            if(field [x - 1][y - 1] != null){
-                if(field [x - 1][y - 1].getSide() != gamerSide){
-                    clickedField[x - 1][y - 1] = true;
+            if(field [y - 1][x - 1] != null){
+                if(field [y - 1][x - 1].getSide() != gamerSide){
+                    clickedField[y - 1][x - 1] = true;
                 }
             }
 
         }catch (ArrayIndexOutOfBoundsException e){
 
+        }
+    }
+
+    private void cleanClicked(){
+        for(int i = 0; i < clickedField.length; i++){
+            for(int j = 0; j < clickedField[i].length; j++){
+                clickedField[i][j] = false;
+            }
         }
     }
 

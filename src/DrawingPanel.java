@@ -77,7 +77,7 @@ public class DrawingPanel extends JPanel {
                 }
                 g.fillRect(cellSize * x, cellSize * y + startY, cellSize, cellSize);
 
-                if(game.getClickedField()[x][y]){
+                if(game.getClickedField()[y][x]){
                     g.setColor(new Color(79, 177, 105));
                     g.fillRect(cellSize * x, cellSize * y + startY, cellSize, cellSize);
                 }

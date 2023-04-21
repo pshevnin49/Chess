@@ -10,7 +10,7 @@ public class GameWindow {
     ImageIcon icon = new ImageIcon("res/icon.png");
 
     public GameWindow() throws IOException {
-        this.game = new Game();
+        this.game = new Game(Sides.DARK, Sides.DARK);
     }
 
     public void drawField(){
